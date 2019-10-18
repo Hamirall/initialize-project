@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./php:/php
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 80:80
+    networks:
+      - intern
+
+  php:
+    build: './'
+    ports:
+      - '81:81'
+    volumes:
+      - './php:/php'
+    networks:
+      - 'intern'
+  
+  postgres:
+    image: postgres
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:         
+        - POSTGRES_DB=postgres
+        - POSTGRES_USER=user
+        - POSTGRES_PASSWORD=passsword
+    networks:
+      - intern
+
+
+networks:
+  intern:
+    external: false
